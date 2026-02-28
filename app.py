@@ -5,9 +5,20 @@ st.set_page_config(page_title="✖️⭕MARUPEKE✖️⭕", page_icon="⭕")
 
 st.title("✖️⭕MARUPEKE✖️⭕")
 
+# ===== 正方形ボタンCSS =====
+st.markdown("""
+<style>
+div.stButton > button {
+    height: 100px;
+    font-size: 40px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ===== 初期化 =====
 if "board" not in st.session_state:
     st.session_state.board = [""] * 9
+    st.session_state.turn = "player"
     st.session_state.game_over = False
 
 # ===== 勝敗判定 =====
@@ -41,30 +52,36 @@ for i in range(9):
         key=i,
         use_container_width=True
     ):
-        if not st.session_state.game_over and st.session_state.board[i] == "":
+        if (
+            not st.session_state.game_over
+            and st.session_state.board[i] == ""
+            and st.session_state.turn == "player"
+        ):
             st.session_state.board[i] = "⭕"
+            st.session_state.turn = "cpu"
 
-            winner = check_winner(st.session_state.board)
-            if winner:
-                st.session_state.game_over = True
-            else:
-                cpu_move()
-                winner = check_winner(st.session_state.board)
-                if winner:
-                    st.session_state.game_over = True
+# ===== CPUターン（分離！）=====
+if st.session_state.turn == "cpu" and not st.session_state.game_over:
+    winner = check_winner(st.session_state.board)
+    if not winner:
+        cpu_move()
+    st.session_state.turn = "player"
 
-# ===== 結果表示 =====
+# ===== 勝敗チェック =====
 winner = check_winner(st.session_state.board)
 
-if winner == "⭕":
-    st.success("あなたの勝ち！ 🎉")
-elif winner == "✖️":
-    st.error("コンピュータの勝ち 🤖")
-elif winner == "Draw":
-    st.info("引き分け！")
+if winner:
+    st.session_state.game_over = True
+    if winner == "⭕":
+        st.success("あなたの勝ち！ 🎉")
+    elif winner == "✖️":
+        st.error("コンピュータの勝ち 🤖")
+    else:
+        st.info("引き分け！")
 
 # ===== リセット =====
 if st.button("もう一回あそぶ"):
     st.session_state.board = [""] * 9
+    st.session_state.turn = "player"
     st.session_state.game_over = False
     st.rerun()
