@@ -56,16 +56,16 @@ for i in range(9):
     if col.button(
         st.session_state.board[i] if st.session_state.board[i] else " ",
         key=i,
-        use_container_width=True,
-        disabled=(
-            st.session_state.game_over
-            or st.session_state.cpu_thinking   # ← これ追加
-            or st.session_state.board[i] != ""
-        )
+        use_container_width=True
     ):
-        st.session_state.board[i] = "⭕"
-        st.session_state.cpu_thinking = True
-        st.rerun()
+        if (
+            not st.session_state.game_over
+            and not st.session_state.cpu_thinking
+            and st.session_state.board[i] == ""
+        ):
+            st.session_state.board[i] = "⭕"
+            st.session_state.cpu_thinking = True
+            st.rerun()
 
 # ===== CPUターン（別フェーズ）=====
 if st.session_state.cpu_thinking and not st.session_state.game_over:
