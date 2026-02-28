@@ -35,6 +35,19 @@ if "cpu_thinking" not in st.session_state:
     st.session_state.cpu_thinking = False
 
 # ===== 勝敗判定 =====
+def check_winner(board):
+    lines = [
+        (0,1,2),(3,4,5),(6,7,8),
+        (0,3,6),(1,4,7),(2,5,8),
+        (0,4,8),(2,4,6)
+    ]
+    for a,b,c in lines:
+        if board[a] != "" and board[a] == board[b] == board[c]:
+            return board[a]
+    if "" not in board:
+        return "Draw"
+    return None
+    
 def smart_cpu_move():
     board = st.session_state.board
 
@@ -97,19 +110,14 @@ if st.session_state.cpu_thinking and not st.session_state.game_over:
     import time
     time.sleep(2)
 
-    winner = smart_cpu_move(st.session_state.board)
-
-    if not winner:
-        empty = [i for i,v in enumerate(st.session_state.board) if v == ""]
-        if empty:
-            choice = random.choice(empty)
-            st.session_state.board[choice] = "✖️"
+    # CPUが打つ
+    smart_cpu_move()
 
     st.session_state.cpu_thinking = False
     st.rerun()
 
 # ===== 勝敗チェック =====
-winner = smart_cpu_move(st.session_state.board)
+winner = check_winner(st.session_state.board)
 
 if winner:
     st.session_state.game_over = True
