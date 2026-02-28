@@ -8,18 +8,21 @@ st.title("✖️⭕MARUPEKE✖️⭕")
 # ===== 正方形CSS =====
 st.markdown("""
 <style>
-div.stButton > button {
+
+/* ボタンを正方形に */
+button[kind="secondary"] {
     width: 100%;
     aspect-ratio: 1 / 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
-div.stButton > button > div > p {
-    font-size: min(18vw, 120px) !important;
-    margin: 0;
+/* 中の文字を巨大化 */
+button[kind="secondary"] * {
+    font-size: min(22vw, 150px) !important;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
