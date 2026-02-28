@@ -57,7 +57,7 @@ def smart_cpu_move():
         (0,4,8),(2,4,6)
     ]
 
-    # ① 勝てるなら勝つ
+    # ① 勝てるなら勝つ（これは残す）
     for a,b,c in lines:
         line = [board[a], board[b], board[c]]
         if line.count("✖️") == 2 and line.count("") == 1:
@@ -65,16 +65,18 @@ def smart_cpu_move():
             board[move] = "✖️"
             return
 
-    # ② 相手が勝ちそうなら止める
-    for a,b,c in lines:
-        line = [board[a], board[b], board[c]]
-        if line.count("⭕") == 2 and line.count("") == 1:
-            move = [a,b,c][line.index("")]
-            board[move] = "✖️"
-            return
+    # ② 相手を止める（70%の確率だけ止める）
+    import random
+    if random.random() < 0.7:   # ← ここで弱体化
+        for a,b,c in lines:
+            line = [board[a], board[b], board[c]]
+            if line.count("⭕") == 2 and line.count("") == 1:
+                move = [a,b,c][line.index("")]
+                board[move] = "✖️"
+                return
 
-    # ③ 真ん中を取る
-    if board[4] == "":
+    # ③ 真ん中（50%の確率）
+    if board[4] == "" and random.random() < 0.5:
         board[4] = "✖️"
         return
 
