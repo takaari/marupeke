@@ -21,6 +21,8 @@ if "board" not in st.session_state:
     st.session_state.board = [""] * 9
     st.session_state.game_over = False
     st.session_state.cpu_pending = False
+if "cpu_thinking" not in st.session_state:
+    st.session_state.cpu_thinking = False
 
 # ===== 勝敗判定 =====
 def check_winner(board):
@@ -52,11 +54,17 @@ for i in range(9):
             and not st.session_state.cpu_pending
         ):
             st.session_state.board[i] = "⭕"
-            st.session_state.cpu_pending = True
-            st.rerun()   # ← ここが重要（即表示）
+            st.session_state.cpu_thinking = True
+            st.rerun()
 
 # ===== CPUターン（別フェーズ）=====
-if st.session_state.cpu_pending and not st.session_state.game_over:
+if st.session_state.cpu_thinking and not st.session_state.game_over:
+
+    st.info("🤖 コンピュータが考え中…")
+
+    import time
+    time.sleep(2)
+
     winner = check_winner(st.session_state.board)
 
     if not winner:
@@ -65,7 +73,7 @@ if st.session_state.cpu_pending and not st.session_state.game_over:
             choice = random.choice(empty)
             st.session_state.board[choice] = "✖️"
 
-    st.session_state.cpu_pending = False
+    st.session_state.cpu_thinking = False
     st.rerun()
 
 # ===== 勝敗チェック =====
