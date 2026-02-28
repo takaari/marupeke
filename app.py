@@ -5,12 +5,13 @@ st.set_page_config(page_title="✖️⭕MARUPEKE✖️⭕", page_icon="⭕")
 
 st.title("✖️⭕MARUPEKE✖️⭕")
 
-# ===== 正方形ボタンCSS =====
+# ===== 正方形CSS =====
 st.markdown("""
 <style>
 div.stButton > button {
-    height: 100px;
-    font-size: 40px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    font-size: 8vw;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -18,8 +19,8 @@ div.stButton > button {
 # ===== 初期化 =====
 if "board" not in st.session_state:
     st.session_state.board = [""] * 9
-    st.session_state.turn = "player"
     st.session_state.game_over = False
+    st.session_state.cpu_pending = False
 
 # ===== 勝敗判定 =====
 def check_winner(board):
@@ -35,14 +36,7 @@ def check_winner(board):
         return "Draw"
     return None
 
-# ===== CPUの手 =====
-def cpu_move():
-    empty = [i for i,v in enumerate(st.session_state.board) if v == ""]
-    if empty:
-        choice = random.choice(empty)
-        st.session_state.board[choice] = "✖️"
-
-# ===== マス表示 =====
+# ===== プレイヤー入力 =====
 cols = st.columns(3)
 
 for i in range(9):
@@ -55,17 +49,24 @@ for i in range(9):
         if (
             not st.session_state.game_over
             and st.session_state.board[i] == ""
-            and st.session_state.turn == "player"
+            and not st.session_state.cpu_pending
         ):
             st.session_state.board[i] = "⭕"
-            st.session_state.turn = "cpu"
+            st.session_state.cpu_pending = True
+            st.rerun()   # ← ここが重要（即表示）
 
-# ===== CPUターン（分離！）=====
-if st.session_state.turn == "cpu" and not st.session_state.game_over:
+# ===== CPUターン（別フェーズ）=====
+if st.session_state.cpu_pending and not st.session_state.game_over:
     winner = check_winner(st.session_state.board)
+
     if not winner:
-        cpu_move()
-    st.session_state.turn = "player"
+        empty = [i for i,v in enumerate(st.session_state.board) if v == ""]
+        if empty:
+            choice = random.choice(empty)
+            st.session_state.board[choice] = "✖️"
+
+    st.session_state.cpu_pending = False
+    st.rerun()
 
 # ===== 勝敗チェック =====
 winner = check_winner(st.session_state.board)
@@ -82,6 +83,6 @@ if winner:
 # ===== リセット =====
 if st.button("もう一回あそぶ"):
     st.session_state.board = [""] * 9
-    st.session_state.turn = "player"
     st.session_state.game_over = False
+    st.session_state.cpu_pending = False
     st.rerun()
