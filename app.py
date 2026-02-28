@@ -9,9 +9,9 @@ st.title("✖️⭕MARUPEKE✖️⭕")
 st.markdown("""
 <style>
 div.stButton > button {
-    width: 100%;
+    width: 50%;
     aspect-ratio: 1 / 1;
-    font-size: 4vw;
+    font-size: 8vw;
 }
 </style>
 """, unsafe_allow_html=True)
