@@ -11,6 +11,9 @@ st.markdown("""
 div.stButton > button {
     width: 100%;
     aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 div.stButton > button > div > p {
