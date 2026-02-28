@@ -11,10 +11,11 @@ st.markdown("""
 div.stButton > button {
     width: 100%;
     aspect-ratio: 1 / 1;
-    font-size: min(16vw, 110px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+}
+
+div.stButton > button > div > p {
+    font-size: min(18vw, 120px) !important;
+    margin: 0;
 }
 </style>
 """, unsafe_allow_html=True)
