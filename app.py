@@ -11,7 +11,7 @@ st.markdown("""
 div.stButton > button {
     width: 50%;
     aspect-ratio: 1 / 1;
-    font-size: 8vw;
+    font-size: 4vw;
 }
 </style>
 """, unsafe_allow_html=True)
